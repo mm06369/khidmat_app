@@ -1,0 +1,149 @@
+return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+        icon: Icon(Icons.arrow_back_ios_new_sharp, color: Colors.orange[900]),
+        onPressed: () => Navigator.of(context).pop(),
+  ), 
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: ListView(
+        children: [
+          // sized box for space
+          const SizedBox(height: 35.0,),
+          Container(
+          alignment: Alignment.center,
+          child: Text("Create Account",
+          style: TextStyle(
+            color: Colors.orange[900],
+            fontSize: 30.0,
+            fontWeight: FontWeight.w400
+          ),
+          ),
+          ),
+          //sized box for space
+          const SizedBox(height: 20.0,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18.0),
+          child: Container(
+            height: 250.0,
+            width: MediaQuery.of(context).size.width - 50,
+            decoration: BoxDecoration(
+              color: Colors.orange[100],
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: Padding(padding: const EdgeInsets.all(10.0), 
+            child: ListView(
+              children: [
+                //sized box for space
+                const SizedBox(height: 15.0,),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 25.0,
+                    height: 3.0
+                  ),
+                  hintText: 'abc@provider.com',
+                  hintStyle: TextStyle(
+                    color: Colors.orange[900],
+                  ),
+                  border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: const BorderSide(color: Colors.black,
+                  ),
+              ),
+                prefixIcon: Icon(Icons.email,color: Colors.orange[900],
+                )
+            ),
+          ),
+          //sized box for space
+          const SizedBox(
+            height: 18.0,
+          ),
+          TextFormField(
+            controller: _passwordController,
+                  decoration: InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 18.0,
+                    height: 5.0
+                  ),
+                  border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: const BorderSide(color: Colors.black),
+              ),
+                prefixIcon: Icon(Icons.password,color: Colors.orange[900],
+                
+                )
+            ),
+          ),
+          const SizedBox(height: 40.0,),
+          Container(
+            width: MediaQuery.of(context).size.width - 50,
+            height: 40.0,
+          child: ElevatedButton(
+              onPressed: () async {
+                String errorMessage = 'null';
+                bool noError = true;
+                try{
+                await auth.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+                } on FirebaseAuthException catch(e){
+                  noError = false;
+                  //print(e.code);
+                  if (e.code == "invalid-email"){
+                    errorMessage = "Email is invalid";
+                  }
+                  else if(e.code == 'weak-password'){
+                    errorMessage = "Password is weak, atleast 6 characters are required";
+                  }
+                  else if(e.code == "email-already-in-use"){
+                    errorMessage = "Email already exists, please try with another email";
+                  }
+                  DialogCreator(errorMessage);
+                }
+                if (noError){
+                  DialogCreator("User account has been created. Kindly proceed to sign in page.");
+                }                
+                _emailController.clear();
+                _passwordController.clear();
+              },
+              style: ButtonStyle(
+              shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+               borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                ),
+                backgroundColor: MaterialStateProperty.all(Colors.white),
+                elevation: MaterialStateProperty.all(15.0)
+              ),
+              child: Text('Sign Up', 
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 18.0,
+                color: Colors.orange[900]
+                ),
+              ),
+            ),
+          ),
+              ]
+              ),
+          )
+          )
+          ),
+          
+        ]
+        ),
+    );
+
+
+    void DialogCreator(String text){
+    Future openDialog() => showDialog(
+    context: context, builder: (context){
+      return DialogBox(text: text);
+          }
+        );
+      openDialog();
+      }

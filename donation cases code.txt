@@ -1,0 +1,79 @@
+
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:khidmat_app/Widgets/caseBox.dart';
+
+
+
+class DonationCases extends StatefulWidget{ 
+  String category = "x";
+  DonationCases({Key ? key, this.category = "x"}):super(key:key);
+  
+  _DonationCases createState() => _DonationCases(this.category);
+
+}
+
+class _DonationCases extends State<DonationCases>{
+
+  String category;
+  _DonationCases(this.category);
+
+ final Stream<QuerySnapshot> users = FirebaseFirestore.instance.collection("projects").snapshots();
+
+  
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.orange[900]),
+      body: ListView(
+          padding: const EdgeInsets.only(top: 20.0) ,
+          children: [
+              Text("Category: $category", textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w500, color: Colors.orange[900], letterSpacing: 2.0),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height,
+                padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                child: StreamBuilder<QuerySnapshot>(stream: users, builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.none){
+                  return const Text("No such collection exits!");
+                }
+                if (snapshot.hasError){
+                    return const Text("Problem loading data");
+                  }
+                if (snapshot.connectionState == ConnectionState.waiting){
+                    return Center(
+                      child: CircularProgressIndicator(color: Colors.orange[900],),
+                    );
+                  }
+                
+                final data = snapshot.requireData;
+                bool noCase = true;
+                return ListView.builder(
+                  itemCount: data.size,
+                  itemBuilder: (context, index){
+                    if (data.docs[index]["category"].toString().toLowerCase() == category.toString().toLowerCase()){
+                      noCase = false;
+                      return CaseBox(title:"${data.docs[index]["Title"]}", description:"${data.docs[index]["Description"]}", amount: data.docs[index]["Amount Required"],);
+                    }
+                    if (index == data.size - 1 && noCase == true){
+                    return Center(
+                      child: Text("No cases available for this category at the moment", 
+                      style: TextStyle(fontSize: 25.0, color: Colors.orange[900])
+                      ),
+                    );
+                    }
+                    return Container();
+                    
+                  }
+                );
+                },
+                )
+                ), 
+                const SizedBox(height: 15.0,)
+          ],
+        ),
+        );
+  }
+}

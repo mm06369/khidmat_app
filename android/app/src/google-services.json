@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "270987391706",
+    "project_id": "khidmat-536bc",
+    "storage_bucket": "khidmat-536bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270987391706:android:a73629f6b6f32339ccabe3",
+        "android_client_info": {
+          "package_name": "com.example.khidmat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270987391706-3c6uq6c7dnp7sd0qlir5c7fq83qpd269.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf9NTq8ta2n278Li0asM9BP4t84bt7Sko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270987391706-3c6uq6c7dnp7sd0qlir5c7fq83qpd269.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
